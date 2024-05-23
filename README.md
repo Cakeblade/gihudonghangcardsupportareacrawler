@@ -1,4 +1,4 @@
-# GihydonghangcardSupportAreaCrawler
+# GihudonghangcardSupportAreaCrawler
 
 ### 동기
 왜 기후동행카드는 쓰잘데기 없이 지역 제한을 걸어두었는가? 그 이유는 아무도 모르지 않다...  
