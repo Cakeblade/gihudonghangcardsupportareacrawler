@@ -7,6 +7,7 @@
 https://news.seoul.go.kr/traffic/climatecard-service 사이트를 크롤링해 DynamoDB에 저장하는 프로그램
 
 ### 사용 방법
+- **(주의) OS와 chrome 버전에 맞는 webdriver가 같은 폴더에 있어야 함**
 - ubuntu 22.04기준 venv 사용시
 ```
 python -m venv [환경이름]
