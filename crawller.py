@@ -2,6 +2,7 @@ import os
 import sys
 import boto3
 
+from tqdm import tqdm
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -13,11 +14,11 @@ load_dotenv()
 GIHU_TABLE = os.environ.get('GIHU_TABLE')
 
 # no need in ec2
-# AWS_REGION = os.environ.get('AWS_REGION')
-# AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
-# AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_REGION = os.environ.get('AWS_REGION')
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 
-# # initialize db
+# initialize db
 client = boto3.client(
     'dynamodb',
     # region_name=AWS_REGION,                         # no need in ec2
@@ -72,12 +73,6 @@ resource = boto3.resource(
 )
 
 gihu_table = resource.Table(GIHU_TABLE)
-gihu_table.put_item(
-    Item={
-        'name' : "test",
-        'id' : 0
-    }
-)
 
 # make webdriver options (ubuntu setting)
 option = Options()
@@ -93,7 +88,9 @@ url = 'https://func.seoul.go.kr/climateCard/rangeList.do'
 table_data = []
 items = []
 
-for i in range(1, 36):
+subway_pbar = tqdm(range(1, 36))
+for i in subway_pbar:
+    subway_pbar.set_description("crawling subway data")
     driver.get(url)
     driver.implicitly_wait(1)
 
@@ -120,7 +117,9 @@ else:
     sys.exit()
 
 # insert subway data
-for row in table_data:    
+subway_data_pbar = tqdm(table_data)
+for row in subway_data_pbar:
+    subway_data_pbar.set_description('storing subway data')
     gihu_table.put_item(
         Item = {
             'id' : int(row[0]),
@@ -139,7 +138,9 @@ url = 'https://func.seoul.go.kr/climateCard/rangeList.do?gubun=2'
 table_data = []
 items = []
 
-for i in range(1, 33):
+bus_pbar = tqdm(range(1, 33))
+for i in bus_pbar:
+    bus_pbar.set_description('crawling bus data')
     driver.get(url)
     driver.implicitly_wait(1)
 
@@ -170,7 +171,9 @@ else:
 
 
 # insert bus data
-for row in table_data:    
+bus_data_pbar = tqdm(table_data)
+for row in bus_data_pbar:
+    bus_data_pbar.set_description('storing bus data')
     gihu_table.put_item(
         Item = {
             'id' : int(row[0]),
